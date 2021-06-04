@@ -3,13 +3,13 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
+//This is a mess because I suppose that estimating area is in the Wallet folder.
 public class App : MonoBehaviour
 {
     const string id0 = "id0";
     const string id1 = "id1";
     const string coinsName = "Coins";
     const string crystalsName = "Crystals";
-
     
     string defaultSavePath;
     const string defaultTextName = "TextWallet.json";

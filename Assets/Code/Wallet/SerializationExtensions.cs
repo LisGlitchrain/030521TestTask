@@ -5,10 +5,6 @@ namespace SerializationExtensions
 {
 	public static class Serialization
 	{
-		//public static bool Validate(this byte[] value, uint hash)
-		//{
-		//	return hash == Crc32.ComputeHash(value);
-		//}
 
 		#region string
 		public static byte[] ToBytes(this string value)
@@ -54,7 +50,6 @@ namespace SerializationExtensions
 			return BitConverter.ToUInt32(value, 0);
 		}
 		#endregion
-
 
 		#region float
 		public static int GetFloatPredefinedSize() => sizeof(float);

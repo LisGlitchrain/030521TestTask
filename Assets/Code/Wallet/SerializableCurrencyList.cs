@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [Serializable]
 class SerializableCurrencyList
 {
-    public SerializableCurrency[] currencies;
+    public SerializableCurrency[] currencies; 
 
     public SerializableCurrencyList(List<Currency> currenciesToSerialize)
     {
