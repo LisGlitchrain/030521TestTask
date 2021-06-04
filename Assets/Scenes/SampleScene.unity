@@ -2868,6 +2868,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94e7d38588ba5b7468df6434c2b1c6fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pathOverride: Assets
+  fileNameOverride: BinTest.dt
+  walletSaveKey: wallet
   currenciesMenu: {fileID: 1365415637}
   currencyValueText: {fileID: 908859024}
   inputField: {fileID: 1514609429}

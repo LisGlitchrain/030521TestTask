@@ -27,7 +27,7 @@ public partial class PlayerWallet : IWallet
     {
         checked
         {
-            op(currencies[currencyId].Value, value);
+            currencies[currencyId].Value = op(currencies[currencyId].Value, value);
         }
     }
 

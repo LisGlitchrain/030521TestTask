@@ -131,6 +131,29 @@ public class WalletTests
         Assert.IsTrue(equals);
     }
 
+    [Test]
+    public void WalletTest_Increasing_By_1()
+    {
+        var id = currenciesIds[0];
+        uint val = 2;
+        uint add = 1;
+        wallet.SetCurrencyValue(id, val);
+        wallet.IncreaseCurrencyValue(id, add);
+        Assert.IsTrue(wallet.GetCurrencyValue(id) == val + add);
+    }
+
+
+    [Test]
+    public void WalletTest_Decreasing_By_1()
+    {
+        var id = currenciesIds[0];
+        uint val = 2;
+        uint sub = 1;
+        wallet.SetCurrencyValue(id, val);
+        wallet.DecreaseCurrencyValue(id, sub);
+        Assert.IsTrue(wallet.GetCurrencyValue(id) == val - sub);
+    }
+
 
     //// A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
     //// `yield return null;` to skip a frame.

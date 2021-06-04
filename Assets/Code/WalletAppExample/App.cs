@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,11 +7,17 @@ public class App : MonoBehaviour
 {
     const string id0 = "id0";
     const string id1 = "id1";
-    const string walletSaveKey = "wallet";
     const string coinsName = "Coins";
     const string crystalsName = "Crystals";
-    string savePathText = $"{Application.streamingAssetsPath}/TextWallet.json";
-    string savePathBinary = $"{Application.streamingAssetsPath}/TextWallet.bn";
+
+    
+    string defaultSavePath;
+    const string defaultTextName = "TextWallet.json";
+    const string defaultBinaryName = "BinaryWallet.dt";
+    public string pathOverride = string.Empty;
+    public string fileNameOverride = string.Empty;
+    public string walletSaveKey = "wallet";
+
 
     string[] currenciesIds = new string[] { id0, id1};
     Dictionary<string, string> currenciesName;
@@ -30,6 +37,7 @@ public class App : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        defaultSavePath = Application.dataPath;
         currenciesName = new Dictionary<string, string>();
         currenciesName.Add(id0, coinsName);
         currenciesName.Add(id1, crystalsName);
@@ -75,26 +83,46 @@ public class App : MonoBehaviour
         UpdateUI();
     }
 
-    public void SaveWalletToTextFile() =>
-    DataSaver.SaveToTextFile(savePathText, pWallet);
+    public void SaveWalletToTextFile()
+    {
+        var savePath = CreatePath(pathOverride, fileNameOverride, defaultTextName);
+        DataSaver.SaveToTextFile(savePath, pWallet);
+    }
 
+    string CreatePath(string pathOverride, string fileNameOverride, string defaultFileName)
+    {
+        string path;
+        if (string.IsNullOrEmpty(pathOverride))
+            path = defaultSavePath;
+        else path = pathOverride;
+
+        if (string.IsNullOrEmpty(fileNameOverride))
+            path = Path.Combine(path, defaultFileName);
+        else path = Path.Combine(path,fileNameOverride);
+        return path;
+    }
 
     public void ReadWalletFromTextFile()
     {
         var newWallet = new PlayerWallet();
-        DataSaver.ReadFromTextFile(savePathText, newWallet);
+        var readPath = CreatePath(pathOverride, fileNameOverride, defaultTextName);
+        DataSaver.ReadFromTextFile(readPath, newWallet);
         pWallet = newWallet;
         UpdateUI();
     }
 
-    public void SaveWalletToBinaryFile() =>
-    DataSaver.SaveToBinaryFile(savePathBinary, pWallet);
+    public void SaveWalletToBinaryFile()
+    {
+        var savePath = CreatePath(pathOverride, fileNameOverride, defaultBinaryName);
+        DataSaver.SaveToBinaryFile(savePath, pWallet);
+    }
 
 
     public void ReadWalletFromBinaryFile()
     {
         var newWallet = new PlayerWallet();
-        DataSaver.ReadFromBinaryFile(savePathBinary, newWallet);
+        var readPath = CreatePath(pathOverride, fileNameOverride, defaultBinaryName);
+        DataSaver.ReadFromBinaryFile(readPath, newWallet);
         pWallet = newWallet;
         UpdateUI();
     }

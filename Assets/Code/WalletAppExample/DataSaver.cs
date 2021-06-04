@@ -8,6 +8,7 @@ static class DataSaver
     {
         PlayerPrefs.SetString(key,valueToSerialize.SerializeToJson());
         PlayerPrefs.Save();
+        Debug.Log($"Save to {key} in PlayerPrefs");
     }
 
     public static void ReadFromPrefs(string key, ISerializable valueToDeserialize)
@@ -21,6 +22,8 @@ static class DataSaver
     {
         var json = valueToSerialize.SerializeToJson();
         File.WriteAllText(path, json);
+        Debug.Log($"Save to {path}.");
+
     }
 
     public static void ReadFromTextFile(string path, ISerializable valueToDeserialize)
@@ -34,6 +37,7 @@ static class DataSaver
     {
         var binary = valueToSerialize.SerializeToBinary();
         File.WriteAllBytes(path, binary);
+        Debug.Log($"Save to {path}.");
     }
 
     public static void ReadFromBinaryFile(string path, ISerializable valueToDeserialize)

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using SerializationExtensions;
 partial class PlayerWallet : ISerializable
 {
     void SetCurrencyListIntoDictionary(SerializableCurrencyList currencyList)
@@ -33,28 +32,47 @@ partial class PlayerWallet : ISerializable
     #region Binary
     public byte[] SerializeToBinary()
     {
-        var serializableCurrencies = new SerializableCurrencyList(currencies.Values.ToList());
-        byte[] binary;
-        using (var stream = new MemoryStream())
+        byte[] result;
+        byte[] buffer;
+        using (MemoryStream ms = new MemoryStream())
         {
-            var serializator = new BinaryFormatter();
-            serializator.Serialize(stream, serializableCurrencies);
-            binary = stream.ToArray();
+            buffer = currencies.Count.ToBytes();
+            SerializationHelper.WriteBytesToStream(buffer, ms, false);
+            foreach (var currency in currencies.Values)
+            {
+                buffer = currency.Id.ToBytes();
+                SerializationHelper.WriteBytesToStream(buffer, ms);
+                buffer = currency.Value.ToBytes();
+                SerializationHelper.WriteBytesToStream(buffer, ms, false);
+            }
+            result = ms.ToArray();
         }
 
-        return binary;
+        return result;
     }
 
     public void Deserialize(byte[] binary)
     {
-        var deserializer = new BinaryFormatter();
-        SerializableCurrencyList serializableCurrencies;
+        var offset = 0;
+        var length = Serialization.GetInt32PredefinedSize();
+        var lengthUInt = Serialization.GetInt32PredefinedSize();
+        byte[] buffer = new byte[length];
+        byte[] bufferUInt = new byte[lengthUInt];
+
+        Buffer.BlockCopy(binary, offset, buffer, 0, length);
+        var currencyCount = buffer.GetInt32();
+        offset += length;
         using (var stream = new MemoryStream(binary))
         {
-            serializableCurrencies = deserializer.Deserialize(stream) as SerializableCurrencyList;
+            for(var i = 0; i < currencyCount; i++)
+            {
+                var id = SerializationHelper.GetStringFromBytesIncrementOffset(binary, ref offset);
+                Buffer.BlockCopy(binary, offset, bufferUInt, 0, lengthUInt);
+                offset += lengthUInt;
+                var value = bufferUInt.GetUInt32();
+                AddCurrency(id, value);
+            }
         }
-
-        SetCurrencyListIntoDictionary(serializableCurrencies);
     }
     #endregion
 }
